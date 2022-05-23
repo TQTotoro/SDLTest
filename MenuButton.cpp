@@ -12,6 +12,7 @@ void MenuButton::draw()
 	SDLGameObject::draw(); // use the base class drawing
 }
 
+// 按钮不需要移动，重写 update 函数
 void MenuButton::update()
 {
 	Vector2D* pMousePos = TheInputHandler::Instance()->getMousePosition();
@@ -49,6 +50,7 @@ void MenuButton::clean()
 void MenuButton::load(const LoaderParams* pParams)
 {
 	SDLGameObject::load(pParams);
+	// 处理特有参数
 	m_callbackID = pParams->getCallbackID();
 	m_currentFrame = MOUSE_OUT;
 }

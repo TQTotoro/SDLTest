@@ -66,8 +66,9 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	TheGameObjectFactory::Instance()->registerType("Player", new PlayerCreator());
 	TheGameObjectFactory::Instance()->registerType("AnimatedGraphic", new AnimatedGraphicCreator());
 
+	// 游戏引擎初始化
 	m_pGameStateMachine = new GameStateMachine();
-	// 添加 MenuState
+	// 直接进入 MainMenuState
 	m_pGameStateMachine->changeState(new MainMenuState());
 
 

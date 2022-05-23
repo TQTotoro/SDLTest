@@ -39,11 +39,10 @@ bool GameOverState::onEnter()
 	// parse the state
 	StateParser stateParser;
 	stateParser.parseState("test.xml", s_gameOverID, &m_gameObjects, &m_textureIDList);
+
 	m_callbacks.push_back(0);
 	m_callbacks.push_back(s_gameOverToMain);
 	m_callbacks.push_back(s_restartPlay);
-
-	// set the callbacks for menu items
 	setCallbacks(m_callbacks);
 
 	std::cout << "entering GameOverState" << std::endl;
@@ -63,7 +62,6 @@ bool GameOverState::onExit()
 	{
 		TheTextureManager::Instance()->clearFromTextureMap(m_textureIDList[i]);
 	}
-
 
 	// 重置鼠标按键的状态
 	TheInputHandler::Instance()->reset();

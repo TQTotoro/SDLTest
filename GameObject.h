@@ -14,7 +14,6 @@ public:
 	virtual void clean() = 0;
 
 protected:
-	// “数据加载”不再使用函数，而是交由专门的类处理
 	GameObject() {}
 	virtual ~GameObject() {}
 };

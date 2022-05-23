@@ -16,7 +16,7 @@ public:
 	void clean();
 	void load(const LoaderParams* pParams);
 
-	// 新增交互功能
+	// 主角新增交互功能
 	void handleInput();
 
 };

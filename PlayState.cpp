@@ -51,6 +51,7 @@ bool PlayState::onEnter()
 	return true;
 }
 
+// 退出时释放资源
 bool PlayState::onExit()
 {
 	for (int i = 0; i < m_gameObjects.size(); i++)

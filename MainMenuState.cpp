@@ -36,7 +36,7 @@ bool MainMenuState::onEnter()
 	m_callbacks.push_back(s_menuToPlay);
 	m_callbacks.push_back(s_exitFromMenu);
 
-	// set the callbacks for menu items
+	// 为不同的按钮类赋予不同的 CallBack 函数
 	setCallbacks(m_callbacks);
 
 	std::cout << "entering MainMenuState" << std::endl;
@@ -78,7 +78,7 @@ void MainMenuState::setCallbacks(const std::vector<Callback>& callbacks)
 	// go through the game objects
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
-		// if they are of type MenuButton then assign a callback based on the id passed in from the file
+		// 子类强转到父类，使用 dynamic_cast
 		if (dynamic_cast<MenuButton*>(m_gameObjects[i]))
 		{
 			MenuButton* pButton = dynamic_cast<MenuButton*>(m_gameObjects[i]);

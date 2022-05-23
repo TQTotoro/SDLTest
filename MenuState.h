@@ -9,7 +9,7 @@
 class MenuState : public GameState
 {
 protected:
-
+	// 按钮对象特有的成员
 	typedef void(*Callback)();
 	virtual void setCallbacks(const std::vector<Callback>& callbacks) = 0;
 

@@ -41,6 +41,7 @@ void Player::update()
 }
 */
 
+// 加入外部设备操控
 void Player::update()
 {
 	handleInput();

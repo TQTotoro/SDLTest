@@ -33,6 +33,7 @@ private:
 	// 辅助确认是否按下按钮
 	bool m_bReleased;
 
+	// 回调函数ID
 	int m_callbackID;
 };
 

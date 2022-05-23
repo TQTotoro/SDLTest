@@ -20,7 +20,7 @@ void Enemy::draw()
 	SDLGameObject::draw();
 }
 
-// 保证不出窗口
+// 保证Enermy不出窗口
 void Enemy::update()
 {
 	m_currentFrame = int(((SDL_GetTicks() / 100) % 5));
@@ -42,5 +42,7 @@ void Enemy::clean() {}
 void Enemy::load(const LoaderParams* pParams)
 {
 	SDLGameObject::load(pParams);
+
+	// 初始速度
 	m_velocity.setY(2);
 }

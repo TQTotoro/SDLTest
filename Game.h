@@ -51,6 +51,7 @@ private:
 		m_pWindow = NULL;
 		m_pRenderer = NULL;
 		m_bRunning = false;
+		m_pGameStateMachine = NULL;
 	};
 
 	SDL_Window* m_pWindow;
