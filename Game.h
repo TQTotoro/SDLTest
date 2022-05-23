@@ -46,6 +46,9 @@ public:
 	SDL_Renderer* getRenderer() const { return m_pRenderer; }
 	GameStateMachine* getStateMachine() { return m_pGameStateMachine; }
 
+	int getGameWidth() const { return m_gameWidth; }
+	int getGameHeight() const { return m_gameHeight; }
+
 private:
 	Game() {
 		m_pWindow = NULL;
@@ -61,6 +64,8 @@ private:
 //	SDL_Rect m_destinationRectangle; // another rectangle
 
 	bool m_bRunning;
+	int m_gameWidth;
+	int m_gameHeight;
 
 //	int m_currentFrame;
 

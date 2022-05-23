@@ -37,6 +37,9 @@ public:
 
 	void clearFromTextureMap(std::string id);
 
+	void drawTile(std::string id, int margin, int spacing, int x, int y, int width, 
+		int height, int currentRow, int currentFrame, SDL_Renderer* pRenderer);
+
 
 private:
 	TextureManager() {} // 单例模式，管理不同类型的 Texture

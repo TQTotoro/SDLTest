@@ -55,6 +55,9 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		return false; // SDL init fail
 	}
 
+	m_gameWidth = width;
+	m_gameHeight = height;
+
 	// 事件类 初始化
 	TheInputHandler::Instance()->initialiseJoysticks();
 
