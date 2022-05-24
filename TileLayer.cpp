@@ -22,11 +22,12 @@ void TileLayer::render()
 	x2 = int(m_position.getX()) % m_tileSize;
 	y2 = int(m_position.getY()) % m_tileSize;
 
+	// 这里的numRows和numColumns不是整张Texture的大小，而是所需的尺寸
 	for (int i = 0; i < m_numRows; i++)
 	{
 		for (int j = 0; j < m_numColumns; j++)
 		{
-			int id = m_tileIDs[i][j + x];
+			int id = m_tileIDs[i + y][j + x];
 
 			// 空白块，不用绘制
 			if (id == 0)

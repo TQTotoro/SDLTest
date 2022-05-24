@@ -18,6 +18,7 @@ struct Tileset
 	std::string name;
 };
 
+// hold tilesets & layers
 class Level
 {
 public:

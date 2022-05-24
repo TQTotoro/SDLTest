@@ -21,6 +21,8 @@ void PlayState::update()
 	{
 		TheGame::Instance()->getStateMachine()->pushState(new PauseState());
 	}
+
+	pLevel->update();
 	/*
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
@@ -86,7 +88,6 @@ bool PlayState::onExit()
 
 bool PlayState::checkCollision(SDLGameObject* p1, SDLGameObject* p2)
 {
-	/*
 	int leftA, leftB;
 	int rightA, rightB;
 	int topA, topB;
@@ -108,6 +109,5 @@ bool PlayState::checkCollision(SDLGameObject* p1, SDLGameObject* p2)
 	if (topA >= bottomB) { return false; }
 	if (rightA <= leftB) { return false; }
 	if (leftA >= rightB) { return false; }
-	*/
 	return true;
 }

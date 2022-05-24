@@ -6,6 +6,7 @@
 #include <SDL2/zlib.h>
 #include <SDL2/zconf.h>
 #include "Level.h"
+#include "ObjectLayer.h"
 
 Level* LevelParser::parseLevel(const char* levelFile)
 {
@@ -18,10 +19,21 @@ Level* LevelParser::parseLevel(const char* levelFile)
 
 	// get the root node
 	TiXmlElement* pRoot = levelDocument.RootElement();
+
+	TiXmlElement* pProperties = NULL;
+	for (TiXmlElement* e = pRoot->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+	{
+		if (e->Value() == std::string("properties"))
+		{
+			pProperties = e;
+			break;
+		}
+	}
+
 	pRoot->Attribute("tilewidth", &m_tileSize);
 	pRoot->Attribute("width", &m_width);
 	pRoot->Attribute("height", &m_height);
-
+	
 	// parse the tilesets
 	for (TiXmlElement* e = pRoot->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
@@ -30,13 +42,28 @@ Level* LevelParser::parseLevel(const char* levelFile)
 			parseTilesets(e, pLevel->getTilesets());
 		}
 	}
+	 // parse the textures needed for this level
+	for (TiXmlElement* e = pProperties->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+	{
+		if (e->Value() == std::string("property"))
+		{
+			parseTextures(e);
+		}
+	}
 
 	// parse any object layers
 	for (TiXmlElement* e = pRoot->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
-		if (e->Value() == std::string("layer"))
+		if (e->Value() == std::string("objectgroup") || e->Value() == std::string("layer"))
 		{
-			parseTileLayer(e, pLevel->getLayers(), pLevel->getTilesets());
+			if (e->FirstChildElement()->Value() == std::string("object"))
+			{
+				parseObjectLayer(e, pLevel->getLayers());
+			}
+			else if (e->FirstChildElement()->Value() == std::string("data"))
+			{
+				parseTileLayer(e, pLevel->getLayers(), pLevel->getTilesets());
+			}
 		}
 	}
 	return pLevel;
@@ -113,4 +140,78 @@ void LevelParser::parseTileLayer(TiXmlElement* pTileElement, std::vector<Layer*>
 
 	pTileLayer->setTileIDs(data);
 	pLayers->push_back(pTileLayer);
+}
+
+
+void LevelParser::parseTextures(TiXmlElement* pTextureRoot)
+{
+	TheTextureManager::Instance()->load(pTextureRoot->Attribute("value"), pTextureRoot->Attribute("name"), TheGame::Instance()->getRenderer());
+}
+
+void LevelParser::parseObjectLayer(TiXmlElement* pObjectElement, std::vector<Layer*>* pLayers)
+{
+	// create an object layer
+	ObjectLayer* pObjectLayer = new ObjectLayer();
+
+	// 调试用
+	std::cout << pObjectElement->FirstChildElement()->Value();
+
+	for (TiXmlElement* e = pObjectElement->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+	{
+		std::cout << e->Value();
+		if (e->Value() == std::string("object"))
+		{
+			// 准备变量
+			int x, y, width, height, numFrames, callbackID, animSpeed;
+			std::string textureID;
+
+			// get the initial node values type, x and y
+			e->Attribute("x", &x);
+			e->Attribute("y", &y);
+			GameObject* pGameObject = TheGameObjectFactory::Instance()->create(e->Attribute("type")); // 空对象，暂时没有参数
+
+			//get the property values
+			for (TiXmlElement* properties = e->FirstChildElement(); properties != NULL; properties = properties->NextSiblingElement())
+			{
+				if (properties->Value() == std::string("properties"))
+				{
+					for (TiXmlElement* property = properties->FirstChildElement(); property != NULL; property = property->NextSiblingElement())
+					{
+						if (property->Value() == std::string("property"))
+						{
+							if (property->Attribute("name") == std::string("numFrames"))
+							{
+								property->Attribute("value", &numFrames);
+							}
+							else if (property->Attribute("name") == std::string("textureHeight"))
+							{
+								property->Attribute("value", &height);
+							}
+							else if (property->Attribute("name") == std::string("textureID"))
+							{
+								textureID = property->Attribute("value");
+							}
+							else if (property->Attribute("name") == std::string("textureWidth"))
+							{
+								property->Attribute("value", &width);
+							}
+							else if (property->Attribute("name") == std::string("callbackID"))
+							{
+								property->Attribute("value", &callbackID);
+							}
+							else if (e->Attribute("name") == std::string("animSpeed"))
+							{
+								property->Attribute("value", &animSpeed);
+							}
+						}
+					}
+				}
+			}
+
+//			pGameObject->load(new LoaderParams(x, y, width, height, textureID, numFrames, callbackID, animSpeed));
+			pGameObject->load(new LoaderParams(x, y, width, height, textureID, numFrames));
+			pObjectLayer->getGameObjects()->push_back(pGameObject);
+		}
+	}
+	pLayers->push_back(pObjectLayer);
 }
