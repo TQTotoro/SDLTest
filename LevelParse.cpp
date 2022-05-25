@@ -14,7 +14,7 @@ Level* LevelParser::parseLevel(const char* levelFile)
 	TiXmlDocument levelDocument;
 	levelDocument.LoadFile(levelFile);
 
-	// create the level object
+	// create the level object，等待下面赋值
 	Level* pLevel = new Level();
 
 	// get the root node
@@ -39,14 +39,17 @@ Level* LevelParser::parseLevel(const char* levelFile)
 	{
 		if (e->Value() == std::string("tileset"))
 		{
+			// pLevel存储解析出来的TileSets信息
 			parseTilesets(e, pLevel->getTilesets());
 		}
 	}
-	 // parse the textures needed for this level
+	
+	// parse the textures
 	for (TiXmlElement* e = pProperties->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
 		if (e->Value() == std::string("property"))
 		{
+			// TextureManager存储解析出来的Texture信息
 			parseTextures(e);
 		}
 	}
@@ -58,10 +61,12 @@ Level* LevelParser::parseLevel(const char* levelFile)
 		{
 			if (e->FirstChildElement()->Value() == std::string("object"))
 			{
+				// pLevel存储解析出来的Layer信息
 				parseObjectLayer(e, pLevel->getLayers());
 			}
 			else if (e->FirstChildElement()->Value() == std::string("data"))
 			{
+				// pLevel存储解析出来的Layer信息
 				parseTileLayer(e, pLevel->getLayers(), pLevel->getTilesets());
 			}
 		}
@@ -71,7 +76,7 @@ Level* LevelParser::parseLevel(const char* levelFile)
 
 void LevelParser::parseTilesets(TiXmlElement* pTilesetRoot, std::vector<Tileset>* pTilesets)
 {
-	// first add the tileset to texture manager
+	// 添加tileset Texture 到 TextureManager
 	TheTextureManager::Instance()->load(pTilesetRoot->FirstChildElement()->Attribute("source"), 
 		pTilesetRoot->Attribute("name"), TheGame::Instance()->getRenderer());
 
@@ -85,7 +90,6 @@ void LevelParser::parseTilesets(TiXmlElement* pTilesetRoot, std::vector<Tileset>
 	pTilesetRoot->Attribute("spacing", &tileset.spacing);
 	pTilesetRoot->Attribute("margin", &tileset.margin);
 	tileset.name = pTilesetRoot->Attribute("name");
-
 	tileset.numColumns = tileset.width / (tileset.tileWidth + tileset.spacing);
 
 	pTilesets->push_back(tileset);
@@ -123,7 +127,7 @@ void LevelParser::parseTileLayer(TiXmlElement* pTileElement, std::vector<Layer*>
 
 	uncompress((Bytef*)&gids[0], &numGids, (const Bytef*)decodedIDs.c_str(), decodedIDs.size());
 
-	// data初始化
+	// data维度初始化
 	std::vector<int> layerRow(m_width);
 	for (int j = 0; j < m_height; j++)
 	{
